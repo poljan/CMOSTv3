@@ -42,7 +42,7 @@ end
 
 
 %read incidence first
-incidenceFile = [inputFolder '/incidence' fileEndName '.xlsx'];
+incidenceFile = [inputFolder '/Incidence' fileEndName '.xlsx'];
 stats.incidence = readtable(incidenceFile);
 
 %read mortality

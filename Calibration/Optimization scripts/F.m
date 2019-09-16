@@ -1,22 +1,20 @@
-function err = F(x, initialCalibration, benchmrks)
-
-%first update settings with proper variables values from x
+function err = F(x, inputArgs, benchmarks)
 
 
-%run Numbers crunching procedure
-%big issue is to estimate how many runs to perform - there is certain amount of stochasticity
-%will min diff step be the solution?
-%data = NumersCrunching();
+[data.y, data.Gender, data.DeathCause, data.Last, data.DeathYear, data.NaturalDeathYear,...
+    data.DirectCancer, data.DirectCancerR, data.DirectCancer2, data.DirectCancer2R,...
+    data.ProgressedCancer, data.ProgressedCancerR, data.TumorRecord,...
+    data.DwellTimeProgression, data.DwellTimeFastCancer,...
+    data.HasCancer, data.NumPolyps, data.MaxPolyps, data.AllPolyps, data.NumCancer, data.MaxCancer,...
+    data.PaymentType, data.Money, data.Number, data.EarlyPolypsRemoved,...
+    data.DiagnosedCancer, data.AdvancedPolypsRemoved, data.YearIncluded, data.YearAlive, data.PBP_Doc]...
+    = NumberCrunching(inputArgs);
 
-%run evaluate function
-%model_benchmarks = evaluate(data);
+data.InputCost = inputArgs.Cost;
+data.InputCostStage = inputArgs.CostStage;
 
-%
+[data,BM] = Evaluation_for_Jan_Sept_2019_lean(data, initialCalibration); % ,Step,Iter); BM
 
-    function res = runModel()
-        
 
-        
-    end
 
 end

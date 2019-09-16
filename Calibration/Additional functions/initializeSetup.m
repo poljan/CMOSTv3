@@ -38,7 +38,7 @@ inputArgs.DwellSpeed        = 'Slow';
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%     Location                     %%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Location                                         
+% Location
 inputArgs.Location.NewPolyp            = initialCalibration.Location_NewPolyp;
 inputArgs.Location.DirectCa            = initialCalibration.Location_DirectCa;
 inputArgs.Location.EarlyProgression    = initialCalibration.Location_EarlyProgression;
@@ -46,7 +46,7 @@ inputArgs.Location.AdvancedProgression = initialCalibration.Location_AdvancedPro
 inputArgs.Location.CancerProgression   = initialCalibration.Location_CancerProgression;
 inputArgs.Location.CancerSymptoms      = initialCalibration.Location_CancerSymptoms;
 inputArgs.Location.ColoDetection       = initialCalibration.Location_ColoDetection;
-inputArgs.Location.RectoSigmoDetection = initialCalibration.Location_RectoSigmoDetection; 
+inputArgs.Location.RectoSigmoDetection = initialCalibration.Location_RectoSigmoDetection;
 % Location.RectoSigmoDetection = initialCalibration.Location_ColoDetection(1:10); % change later
 inputArgs.Location.ColoReach           = initialCalibration.Location_ColoReach;
 inputArgs.Location.RectoSigmoReach     = initialCalibration.Location_RectoSigmoReach;
@@ -85,7 +85,7 @@ inputArgs.Cost.Sept9_HighSpec                 = initialCalibration.Cost.Sept9_Hi
 inputArgs.Cost.other                          = initialCalibration.Cost.other;
 
 % current treatment costs
-inputArgs.CostStage.Initial(1)  = initialCalibration.Cost.Initial_I; 
+inputArgs.CostStage.Initial(1)  = initialCalibration.Cost.Initial_I;
 inputArgs.CostStage.Initial(2)  = initialCalibration.Cost.Initial_II;
 inputArgs.CostStage.Initial(3)  = initialCalibration.Cost.Initial_III;
 inputArgs.CostStage.Initial(4)  = initialCalibration.Cost.Initial_IV;
@@ -102,7 +102,7 @@ inputArgs.CostStage.Final_oc(2) = initialCalibration.Cost.Final_oc_II;
 inputArgs.CostStage.Final_oc(3) = initialCalibration.Cost.Final_oc_III;
 inputArgs.CostStage.Final_oc(4) = initialCalibration.Cost.Final_oc_IV;
 
-% treatment costs in the near future    
+% treatment costs in the near future
 inputArgs.CostStage.FutInitial(1)  = initialCalibration.Cost.FutInitial_I;
 inputArgs.CostStage.FutInitial(2)  = initialCalibration.Cost.FutInitial_II;
 inputArgs.CostStage.FutInitial(3)  = initialCalibration.Cost.FutInitial_III;
@@ -145,7 +145,7 @@ tmp = '                         ';
 if length(SpecialText) >= 25
     SpecialText = SpecialText (1:25);
 else tmp(1:length(SpecialText)) = SpecialText;
-    SpecialText = tmp; 
+    SpecialText = tmp;
 end
 
 inputArgs.flag.Polyp_Surveillance  = isequal(initialCalibration.Polyp_Surveillance, 'on');
@@ -236,21 +236,21 @@ end
 %%%     Screening Variables          %%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% PercentPop, Adherence, FollowUp, y-start, y-end, interval, y after colo, specificity    
+% PercentPop, Adherence, FollowUp, y-start, y-end, interval, y after colo, specificity
 inputArgs.ScreeningTest(1, 1:8) = [initialCalibration.Screening.Colonoscopy(1:2), 0, initialCalibration.Screening.Colonoscopy(3:7)];
-inputArgs.ScreeningTest(2, 1:8) = initialCalibration.Screening.Rectosigmoidoscopy; 
+inputArgs.ScreeningTest(2, 1:8) = initialCalibration.Screening.Rectosigmoidoscopy;
 inputArgs.ScreeningTest(3, 1:8) = initialCalibration.Screening.FOBT;
 inputArgs.ScreeningTest(4, 1:8) = initialCalibration.Screening.I_FOBT;
 inputArgs.ScreeningTest(5, 1:8) = initialCalibration.Screening.Sept9_HiSens;
 inputArgs.ScreeningTest(6, 1:8) = initialCalibration.Screening.Sept9_HiSpec;
 inputArgs.ScreeningTest(7, 1:8) = initialCalibration.Screening.other;
 
-inputArgs.ScreeningHandles = {'Colonoscopy', 'Rectosigmoidoscopy', 'FOBT', 'I_FOBT',...
+ScreeningHandles = {'Colonoscopy', 'Rectosigmoidoscopy', 'FOBT', 'I_FOBT',...
     'Sept9_HiSens', 'Sept9_HiSpec', 'other'};
 % 1: colonoscopy, 2: Rectosigmoidoscopy, 3: FOBT, 4: I_FOBT
 % 5: Sept9_HiSens, 6: Sept9_HiSpec, 7: other
 
-inputArgs.ScreeningMatrix = zeros(1, 1000);
+ScreeningMatrix = zeros(1, 1000);
 Start = 1;
 Summe = 0;
 for f=1:length(ScreeningHandles)
@@ -259,12 +259,12 @@ end
 for f=1:length(ScreeningHandles)
     if initialCalibration.Screening.(ScreeningHandles{f})(1) > 0
         Ende = Start + round(initialCalibration.Screening.(ScreeningHandles{f})(1) * 1000);
-        inputArgs.ScreeningMatrix(Start:Ende) = f;
+        ScreeningMatrix(Start:Ende) = f;
         Start = Ende + 1;
     end
 end
 
-% P1, P2, P3, P4, P5, P6, Ca1, Ca2, Ca3, Ca4 
+% P1, P2, P3, P4, P5, P6, Ca1, Ca2, Ca3, Ca4
 inputArgs.Sensitivity(3,:)        = initialCalibration.Screening.FOBT_Sens;
 inputArgs.Sensitivity(4,:)        = initialCalibration.Screening.I_FOBT_Sens;
 inputArgs.Sensitivity(5,:)        = initialCalibration.Screening.Sept9_HiSens_Sens;
@@ -297,7 +297,7 @@ for f=1:n
     else
         inputArgs.Gender(f) = 1;
     end
-    inputArgs.ScreeningPreference(f) = inputArgs.ScreeningMatrix(round(rand*999)+1);
+    inputArgs.ScreeningPreference(f) = ScreeningMatrix(round(rand*999)+1);
 end
 
 % Life Table
@@ -326,31 +326,31 @@ inputArgs.StageDuration = [ 1 0 0 0;...
 % %     0.11        0.15        0.327	    0.413];
 
 inputArgs.tx1 = ...
-[0.442	0.490	0.010	0.003;
-0.413	0.515	0.017	0.006;
-0.385	0.533	0.028	0.010;
-0.716	1.091	0.083	0.032;
-0.662	1.101	0.118	0.050;
-0.913	1.645	0.243	0.111;
-0.833	1.616	0.321	0.158;
-1.004	2.087	0.546	0.288;
-0.899	1.992	0.675	0.380;
-0.996	2.344	1.012	0.605;
-1.223	3.049	1.654	1.047;
-1.670	4.396	2.960	1.979;
-1.571	4.352	3.598	2.532;
-1.233	3.587	3.604	2.663;
-0.668	2.036	2.464	1.907;
-0.405	1.289	1.864	1.508;
-0.274	0.910	1.560	1.317;
-0.231	0.800	1.615	1.420;
-0.146	0.527	1.243	1.137;
-0.123	0.461	1.267	1.204;
-0.069	0.270	0.856	0.843;
-0.059	0.236	0.863	0.881;
-0.025	0.104	0.434	0.458;
-0.021	0.091	0.434	0.473;
-0.018	0.080	0.434	0.488];
+    [0.442	0.490	0.010	0.003;
+    0.413	0.515	0.017	0.006;
+    0.385	0.533	0.028	0.010;
+    0.716	1.091	0.083	0.032;
+    0.662	1.101	0.118	0.050;
+    0.913	1.645	0.243	0.111;
+    0.833	1.616	0.321	0.158;
+    1.004	2.087	0.546	0.288;
+    0.899	1.992	0.675	0.380;
+    0.996	2.344	1.012	0.605;
+    1.223	3.049	1.654	1.047;
+    1.670	4.396	2.960	1.979;
+    1.571	4.352	3.598	2.532;
+    1.233	3.587	3.604	2.663;
+    0.668	2.036	2.464	1.907;
+    0.405	1.289	1.864	1.508;
+    0.274	0.910	1.560	1.317;
+    0.231	0.800	1.615	1.420;
+    0.146	0.527	1.243	1.137;
+    0.123	0.461	1.267	1.204;
+    0.069	0.270	0.856	0.843;
+    0.059	0.236	0.863	0.881;
+    0.025	0.104	0.434	0.458;
+    0.021	0.091	0.434	0.473;
+    0.018	0.080	0.434	0.488];
 
 % we use this matrix to conveniently assign a location to each new polyp
 inputArgs.LocationMatrix = zeros(2, 1000);
@@ -369,13 +369,11 @@ for f = 1 : 13
     Counter = Ende;
 end
 
-if isequal (SpecialText(1:6), 'Po+-55') 
+if isequal (SpecialText(1:6), 'Po+-55')
     inputArgs.LifeTable = zeros(size(inputArgs.LifeTable));
 end
 
-% a = NumberCrunching( Cost, CostStage, risc,...
-%     flag, SpecialText, female, Sensitivity, ScreeningTest, ScreeningPreference, AgeProgression,...
-%     NewPolyp, ColonoscopyLikelyhood, IndividualRisk, RiskDistribution, Gender, LifeTable,...
-%     LocationMatrix, StageDuration, tx1, PBP, stats);
+
+
 end
 

@@ -1,7 +1,7 @@
-function optimizationResults = performOptimization(initialCalibration, benchmarks, opt)
-%PERFORMOPTIMIZATION Summary of this function goes here
-%   Detailed explanation goes here
-outputArg1 = inputArg1;
-outputArg2 = inputArg2;
+function optimizationResults = performOptimization(inputArgs, benchmarks, opt)
+
+
+    
+
 end
 
