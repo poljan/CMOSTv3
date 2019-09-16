@@ -1,0 +1,10 @@
+%variables form data that are required by the stripped Evaluate function
+y
+MaxPolyps
+YearIncluded
+Gender
+TumorRecord
+AllPolyps
+NumPolyps
+DirectCancer
+ProgressedCancer
