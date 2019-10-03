@@ -1,20 +1,13 @@
-function err = F(x, inputArgs, benchmarks)
+function [err, initialCalibration] = F(x, initialCalibration,benchmarks,opt)
 
+warning off;
 
-[data.y, data.Gender, data.DeathCause, data.Last, data.DeathYear, data.NaturalDeathYear,...
-    data.DirectCancer, data.DirectCancerR, data.DirectCancer2, data.DirectCancer2R,...
-    data.ProgressedCancer, data.ProgressedCancerR, data.TumorRecord,...
-    data.DwellTimeProgression, data.DwellTimeFastCancer,...
-    data.HasCancer, data.NumPolyps, data.MaxPolyps, data.AllPolyps, data.NumCancer, data.MaxCancer,...
-    data.PaymentType, data.Money, data.Number, data.EarlyPolypsRemoved,...
-    data.DiagnosedCancer, data.AdvancedPolypsRemoved, data.YearIncluded, data.YearAlive, data.PBP_Doc]...
-    = NumberCrunching(inputArgs);
+initialCalibration = updateParams(x,initialCalibration, opt);
 
-data.InputCost = inputArgs.Cost;
-data.InputCostStage = inputArgs.CostStage;
+inputArgs = initializeSetup(initialCalibration);
 
-[data,BM] = Evaluation_for_Jan_Sept_2019_lean(data, initialCalibration); % ,Step,Iter); BM
+[data.y, data.PolypsSumm, data.IncidenceCounter] = NumberCrunchingLean(inputArgs);
 
-
+[~, ~, err] = Evaluation_for_Jan_Sept_2019_lean(data, initialCalibration, benchmarks, nargout > 1); % ,Step,Iter); BM
 
 end

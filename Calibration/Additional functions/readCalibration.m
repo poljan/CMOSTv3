@@ -1,9 +1,14 @@
-function settings = readCalibration(file)
+function [settings, path, file] = readCalibration(file)
     if isempty(file)
        [file, path] = uigetfile({'*.mat'},...
                           'Select calibration file'); 
     end
     settings = load([path file]);
-    settings = settings.Variables;
+    if isfield(settings,'Variables')
+        settings = settings.Variables;
+    else
+       settings = settings.temp; 
+    end
+       
 end
 

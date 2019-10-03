@@ -1,5 +1,30 @@
 function inputArgs = initializeSetup(initialCalibration)
 
+sigmoidal = @(A,x)(A(1)./(1+exp(-(A(2).*x - A(3)))));
+gaussian  = @(B,x)(B(1)*exp(-(B(2).*x - B(3)).^2));
+
+initialCalibration.NewPolypRate = sigmoidal(initialCalibration.NewPolypRateParams,1:length(initialCalibration.NewPolypRate));
+initialCalibration.EarlyProgressionRate = gaussian(initialCalibration.EarlyProgressionRateParams,1:length(initialCalibration.EarlyProgressionRate));
+initialCalibration.AdvancedProgressionRate = gaussian(initialCalibration.AdvancedProgressionRate,1:length(initialCalibration.AdvancedProgressionRate));
+
+%setting individual risks
+Values = [10, 20, 30, 40, 50, 60, 70, 80, 90, 95, 97, 100]*5;
+
+initialCalibration.IndividualRiskMesh = initialCalibration.IndividualRisk(Values);
+% individual polyp risk
+tmp(1:Values(1)) = initialCalibration.IndividualRiskMesh(1);
+for x1=1:length(Values)-1
+    Start = Values(x1)+1;
+    Ende  = Values(x1+1);
+    for x2=Start:Ende
+        tmp(x2) = (initialCalibration.IndividualRiskMesh(x1) * (Ende-x2) + ...
+           initialCalibration.IndividualRiskMesh(x1+1) * (x2-Start))/(Ende-Start);
+    end
+end
+initialCalibration.IndividualRisk = tmp; clear tmp
+
+%%
+
 inputArgs.stats = readBenchmarkStatistics();
 inputArgs.stats.mortalityYears = 5; %how many years to take into account
 

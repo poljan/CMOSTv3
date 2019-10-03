@@ -19,7 +19,7 @@ simSettings.yearsToSimulate = 100; %numbers of years to simulate
 simSettings.numPeriods = 4; %number of periods in each simulation year
 
 NAlive = uint32(length(Gender)); %number of individuals
-disp(['Simulated population size: ' int2str(NAlive)]);
+%disp(['Simulated population size: ' int2str(NAlive)]);
 SubjectIDs = uint32(1:NAlive)'; %this will hold actual indices to the output vector
 NumIndividualsToSimulate = NAlive;
 
@@ -1004,7 +1004,7 @@ while and(NAlive > 0 || ~isempty(GenderWouldBeAlive), stepCounter < yearsToSimul
         end
         
         
-        fprintf('Calculating year %d\n', currentYear);
+        %fprintf('Calculating year %d\n', currentYear);
     end
     
 end
