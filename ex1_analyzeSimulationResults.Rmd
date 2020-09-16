@@ -1,0 +1,109 @@
+---
+title: "CMOST simulation results"
+author: "Jan Poleszczuk"
+date: "6/29/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+require(ini)
+require(ggplot2)
+library(reshape2)
+
+toVector <- function(x) {
+  return(as.numeric(unlist(strsplit(x,","))))
+}
+```
+
+# Baseline simulation results (no screening)
+Simulation for 100,000 individuals.
+```{r dataBaseline}
+dataBaseline <- read.ini("Results/strata0_results.out")
+
+
+#comparing number of detected cancers
+detectedCancers <- data.frame(age = 1:length(toVector(dataBaseline$detectedCancers$females)), total = toVector(dataBaseline$detectedCancers$females) + toVector(dataBaseline$detectedCancers$males),
+                              males= toVector(dataBaseline$detectedCancers$males),
+                              females = toVector(dataBaseline$detectedCancers$females))
+d <- melt(detectedCancers , id.vars="age")
+ggplot(data = d, aes(x = age, y = value, col = variable)) + 
+  geom_line() + 
+  geom_point() +
+  labs(colour = "",x = "Age (years)",y = "Number of detected cancers")
+
+
+#incidence
+incidence <- detectedCancers
+incidence$total <- incidence$total/(toVector(dataBaseline$population$males)+toVector(dataBaseline$population$females))*100000
+incidence$males <- incidence$males/toVector(dataBaseline$population$males)*100000
+incidence$females <- incidence$females/toVector(dataBaseline$population$females)*100000
+
+d <- melt(incidence, id.vars="age")
+ggplot(data = d, aes(x = age, y = value, col = variable)) + 
+  geom_line() + 
+  geom_point() +
+  labs(colour = "",x = "Age (years)",y = "Cancer incidence (cases per 100,000)")
+
+
+#life years lost
+lifeyearslost <- data.frame(age = 1:length(toVector(dataBaseline$lifeyearslost$cancer)), total = toVector(dataBaseline$lifeyearslost$cancer) + toVector(dataBaseline$lifeyearslost$colo))
+d <- melt(lifeyearslost, id.vars="age")
+ggplot(data = d, aes(x = age, y = value, col = variable)) + 
+  geom_line() + 
+  geom_point() +
+  labs(colour = "",x = "Age (years)",y = "Life years lost")
+
+#number of performed colonoscopies
+colonoscopies <- data.frame(age = 1:length(toVector(dataBaseline$numberColonoscopies$females)), total = toVector(dataBaseline$numberColonoscopies$females) + toVector(dataBaseline$numberColonoscopies$males),
+                              males= toVector(dataBaseline$numberColonoscopies$males),
+                              females = toVector(dataBaseline$numberColonoscopies$females))
+d <- melt(colonoscopies, id.vars="age")
+ggplot(data = d, aes(x = age, y = value, col = variable)) + 
+  geom_line() + 
+  geom_point() +
+  labs(colour = "",x = "Age (years)",y = "Total number of performed colonoscopies")
+
+
+```
+
+# Screening results
+
+```{r dataScreening}
+dataEvaluation <- read.ini("Results/strata0_screeningVarAdherence.out")
+mesh <- 1:20
+
+IncidenceReduction <- c()
+MortalityReduction <- c()
+DiscountedLifeYearsGained <- c()
+USDperLifeYearsGained <- c()
+numScreenColo <- c()
+for (i in mesh) {
+  w <- dataEvaluation[[paste('adh',i,sep="")]]
+  IncidenceReduction <- c(IncidenceReduction, as.numeric(w$IncidenceReduction))
+  MortalityReduction <- c(MortalityReduction, as.numeric(w$MortalityReduction))
+  DiscountedLifeYearsGained <- c(DiscountedLifeYearsGained,as.numeric(w$DiscountedLYgained))
+  USDperLifeYearsGained <- c(USDperLifeYearsGained,as.numeric(w$USdollarPerLYG))
+  numScreenColo <- c(numScreenColo,as.numeric( w$numberOfScreeningColonoscopies))
+}
+
+reductions <- data.frame(adherence = numScreenColo/max(numScreenColo)*100, incidence = IncidenceReduction,mortality = MortalityReduction)
+d <- melt(reductions, id.vars="adherence")
+ggplot(data = d, aes(x = adherence, y = value, col = variable)) + 
+  geom_line() + 
+  labs(colour = "",x = "Adherence (%)",y = "Reduction(%)")
+
+
+lyl <- data.frame(adherence = numScreenColo/max(numScreenColo)*100, lifeyearsgained = DiscountedLifeYearsGained)
+ggplot(data = lyl, aes(x = adherence, y = lifeyearsgained)) + 
+  geom_line() + 
+  labs(colour = "",x = "Adherence (%)",y = "Discounted life years gained (per 1,000 individuals)")
+
+dusdlyl <- data.frame(adherence = numScreenColo/max(numScreenColo)*100, dusdlyl = USDperLifeYearsGained)
+ggplot(data = dusdlyl, aes(x = adherence, y = dusdlyl)) + 
+  geom_line() + 
+  labs(colour = "",x = "Adherence (%)",y = "Discounted USD per life year gained")
+
+```
+
+
